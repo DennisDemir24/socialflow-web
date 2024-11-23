@@ -1,3 +1,4 @@
+import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -15,21 +16,25 @@ const authPaths = [
   '/auth/signup'
 ];
 
-export function middleware(request: NextRequest) {
-  const currentUser = request.cookies.get('sessionId');
+export async function middleware(request: NextRequest) {
+  const res = NextResponse.next();
+  const supabase = createMiddlewareClient({ req: request, res });
   const { pathname } = request.nextUrl;
 
+  // Check if the user is authenticated
+  const { data: { session } } = await supabase.auth.getSession();
+
   // Redirect authenticated users away from auth pages
-  if (currentUser && authPaths.some(path => pathname.startsWith(path))) {
+  if (session && authPaths.some(path => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL('/dashboard', request.url));
   }
 
   // Redirect non-authenticated users to sign in page
-  if (!currentUser && protectedPaths.some(path => pathname.startsWith(path))) {
+  if (!session && protectedPaths.some(path => pathname.startsWith(path))) {
     return NextResponse.redirect(new URL('/auth/signin', request.url));
   }
 
-  return NextResponse.next();
+  return res;
 }
 
 export const config = {
