@@ -17,7 +17,7 @@ export function SignInForm() {
     e.preventDefault();
     await login(email, password);
     if (!error) {
-      router.push('/dashboard');
+      router.push('/');
     }
   };
 
@@ -53,6 +53,12 @@ export function SignInForm() {
           />
         </div>
       </div>
+
+      {error && (
+        <div className="text-red-500 text-sm mb-4">
+          {error}
+        </div>
+      )}
 
       <div className="flex items-center justify-between">
         <div className="flex items-center">

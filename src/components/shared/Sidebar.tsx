@@ -1,11 +1,12 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { Calendar, LayoutDashboard, Settings, Users2, FolderKanban, CalendarDays, ChevronLeft, ChevronRight } from "lucide-react"
+import { Calendar, LayoutDashboard, Settings, Users2, FolderKanban, CalendarDays, ChevronLeft, ChevronRight, LogOut, LogIn } from "lucide-react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Logo } from "./Logo"
 import { useState } from "react"
+import { useAuthStore } from "@/store/authStore"
 
 const routes = [
   {
@@ -48,7 +49,22 @@ const routes = [
 
 export default function Sidebar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [isOpen, setIsOpen] = useState(true)
+  const {logout, isAuthenticated} = useAuthStore()
+
+  const handleLogout = () => {
+    try {
+      logout()
+    router.push('/auth/signin')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const handleSignIn = () => {
+    router.push('/auth/signin')
+  }
 
   return (
     <div 
@@ -96,6 +112,41 @@ export default function Sidebar() {
             </Link>
           ))}
         </div>
+      </div>
+      <div className="px-3 py-2">
+      {isAuthenticated ? (
+          <button
+            onClick={handleLogout}
+            className={cn(
+              "text-sm group flex p-3 w-full cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition text-zinc-400",
+              isOpen ? "justify-start" : "justify-center"
+            )}
+          >
+            <div className={cn(
+              "flex items-center",
+              isOpen ? "flex-1" : "flex-col"
+            )}>
+              <LogOut className={cn("h-5 w-5", isOpen ? "mr-3" : "", "text-[#5B5FED]")} />
+              {isOpen && "Logout"}
+            </div>
+          </button>
+        ) : (
+          <button
+            onClick={handleSignIn}
+            className={cn(
+              "text-sm group flex p-3 w-full cursor-pointer hover:text-white hover:bg-white/10 rounded-lg transition text-zinc-400",
+              isOpen ? "justify-start" : "justify-center"
+            )}
+          >
+            <div className={cn(
+              "flex items-center",
+              isOpen ? "flex-1" : "flex-col"
+            )}>
+              <LogIn className={cn("h-5 w-5", isOpen ? "mr-3" : "", "text-[#5B5FED]")} />
+              {isOpen && "Sign In"}
+            </div>
+          </button>
+        )}
       </div>
     </div>
   )

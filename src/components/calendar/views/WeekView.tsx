@@ -41,17 +41,17 @@ export const WeekView: React.FC<WeekViewProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex border-b">
+      <div className="flex border-b border-gray-700">
         <div className="w-24 shrink-0" />
         {days.map((day) => (
           <div
             key={day.toString()}
-            className="flex-1 p-4 text-center border-l first:border-l-0"
+            className="flex-1 p-4 text-center border-l border-gray-700 first:border-l-0"
           >
-            <div className="text-sm font-medium text-gray-900">
+            <div className="text-sm font-medium text-gray-200">
               {format(day, 'EEE')}
             </div>
-            <div className="mt-1 text-sm text-gray-500">
+            <div className="mt-1 text-sm text-gray-400">
               {format(day, 'd')}
             </div>
           </div>
@@ -59,9 +59,9 @@ export const WeekView: React.FC<WeekViewProps> = ({
       </div>
       <div className="flex-1 overflow-auto">
         {hours.map((hour) => (
-          <div key={hour.toString()} className="flex border-b min-h-[100px]">
-            <div className="w-24 p-4 border-r bg-gray-50 shrink-0">
-              <span className="text-sm font-medium text-gray-600">
+          <div key={hour.toString()} className="flex border-b border-gray-700 min-h-[100px]">
+            <div className="w-24 p-4 border-r border-gray-700 bg-[#141517] shrink-0">
+              <span className="text-sm font-medium text-gray-400">
                 {format(hour, 'h:mm a')}
               </span>
             </div>
@@ -87,8 +87,8 @@ export const WeekView: React.FC<WeekViewProps> = ({
                   key={day.toString()}
                   ref={drop}
                   className={`
-                    flex-1 border-l first:border-l-0 p-2 transition-colors cursor-pointer
-                    ${isOver ? 'bg-blue-50' : 'bg-white hover:bg-gray-50'}
+                    flex-1 border-l border-gray-700 first:border-l-0 p-2 transition-colors cursor-pointer
+                    ${isOver ? 'bg-[#2A2B31]' : 'bg-[#1E1F25] hover:bg-[#2A2B31]'}
                   `}
                   onClick={() => {
                     const clickDate = new Date(day);
@@ -99,9 +99,9 @@ export const WeekView: React.FC<WeekViewProps> = ({
                   <div className="space-y-2">
                     {dayHourPosts.map((post) => (
                       <PostCard 
-                        key={post.id} 
-                        post={post} 
-                        onClick={onPostClick}
+                        key={post.id}
+                        post={post}
+                        onClick={() => onPostClick?.(post)}
                       />
                     ))}
                   </div>

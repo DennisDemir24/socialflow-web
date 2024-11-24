@@ -55,11 +55,11 @@ export const MonthView: React.FC<MonthViewProps> = ({
 
   return (
     <div className="flex flex-col h-full">
-      <div className="grid grid-cols-7 border-b">
+      <div className="grid grid-cols-7 border-b border-gray-700">
         {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map((day) => (
           <div
             key={day}
-            className="p-4 text-center text-sm font-medium text-gray-900"
+            className="p-4 text-center text-sm font-medium text-gray-200"
           >
             {day}
           </div>
@@ -67,7 +67,7 @@ export const MonthView: React.FC<MonthViewProps> = ({
       </div>
       <div className="flex-1 grid grid-rows-[repeat(6,minmax(0,1fr))]">
         {weeks.map((week, weekIndex) => (
-          <div key={weekIndex} className="grid grid-cols-7 border-b last:border-b-0">
+          <div key={weekIndex} className="grid grid-cols-7 border-b border-gray-700 last:border-b-0">
             {week.map((day) => {
               const [{ isOver }, drop] = useDrop(() => ({
                 accept: 'POST',
@@ -86,21 +86,24 @@ export const MonthView: React.FC<MonthViewProps> = ({
                   key={day.toString()}
                   ref={drop}
                   className={`
-                    border-r last:border-r-0 p-2 min-h-[120px]
-                    ${!isSameMonth(day, selectedDate) ? 'bg-gray-50' : 'bg-white'}
-                    ${isOver ? 'bg-blue-50' : 'hover:bg-gray-50'}
+                    border-r border-gray-700 last:border-r-0 p-2 min-h-[120px]
+                    ${!isSameMonth(day, selectedDate) ? 'bg-[#141517]' : 'bg-[#1E1F25]'}
+                    ${isOver ? 'bg-[#2A2B31]' : 'hover:bg-[#2A2B31]'}
                     cursor-pointer transition-colors
                   `}
                   onClick={() => onTimeSlotClick?.(day)}
                 >
-                  <div className="text-sm font-medium text-gray-900 mb-2">
+                  <div className={`
+                    text-sm font-medium mb-2
+                    ${!isSameMonth(day, selectedDate) ? 'text-gray-500' : 'text-gray-200'}
+                  `}>
                     {format(day, 'd')}
                   </div>
                   <div className="space-y-1">
                     {dayPosts.map((post) => (
-                      <PostCard 
-                        key={post.id} 
-                        post={post} 
+                      <PostCard
+                        key={post.id}
+                        post={post}
                         onClick={onPostClick}
                       />
                     ))}
