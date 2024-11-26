@@ -21,13 +21,13 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
   }));
 
   const platformColors: Record<string, { bg: string; text: string }> = {
-    twitter: { bg: 'bg-blue-100', text: 'text-blue-800' },
-    facebook: { bg: 'bg-indigo-100', text: 'text-indigo-800' },
-    instagram: { bg: 'bg-pink-100', text: 'text-pink-800' },
-    linkedin: { bg: 'bg-sky-100', text: 'text-sky-800' },
+    twitter: { bg: 'bg-blue-900/30', text: 'text-blue-200' },
+    facebook: { bg: 'bg-indigo-900/30', text: 'text-indigo-200' },
+    instagram: { bg: 'bg-pink-900/30', text: 'text-pink-200' },
+    linkedin: { bg: 'bg-sky-900/30', text: 'text-sky-200' },
   };
 
-  const { bg, text } = platformColors[post.platform.toLowerCase()] || { bg: 'bg-gray-100', text: 'text-gray-800' };
+  const { bg, text } = platformColors[post.platform.toLowerCase()] || { bg: 'bg-gray-800/30', text: 'text-gray-200' };
 
   const handleClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // Prevent time slot click
@@ -45,7 +45,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
         ${bg} ${text}
         ${isDragging ? 'opacity-50' : ''}
         transition-all duration-200 ease-in-out
-        hover:ring-2 hover:ring-blue-400 hover:ring-opacity-50
+        hover:ring-2 hover:ring-[#5B5FED] hover:ring-opacity-50
         max-w-full
       `}
     >
@@ -63,7 +63,7 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
         </div>
         <div className="flex-shrink-0">
           {post.status === 'draft' && (
-            <span className="px-1.5 py-0.5 text-xs bg-gray-100 text-gray-600 rounded-full whitespace-nowrap">
+            <span className="px-1.5 py-0.5 text-xs bg-gray-800/50 text-gray-300 rounded-full whitespace-nowrap">
               Draft
             </span>
           )}
@@ -80,13 +80,13 @@ export const PostCard: React.FC<PostCardProps> = ({ post, onClick }) => {
           {post.tags.slice(0, 2).map((tag) => (
             <span
               key={tag}
-              className="px-1.5 py-0.5 text-xs bg-white bg-opacity-50 rounded whitespace-nowrap"
+              className="px-1.5 py-0.5 text-xs bg-gray-800/50 text-gray-300 rounded whitespace-nowrap"
             >
               #{tag}
             </span>
           ))}
           {post.tags.length > 2 && (
-            <span className="px-1.5 py-0.5 text-xs bg-white bg-opacity-50 rounded whitespace-nowrap">
+            <span className="px-1.5 py-0.5 text-xs bg-gray-800/50 text-gray-300 rounded whitespace-nowrap">
               +{post.tags.length - 2}
             </span>
           )}

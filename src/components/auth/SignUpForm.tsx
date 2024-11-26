@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Input } from '../ui/Input';
 import { Label } from '../ui/Label';
@@ -10,9 +12,23 @@ export function SignUpForm() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
+  const { register, error, loading } = useAuthStore();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    register(email, password, name );
+    if (!error) {
+      router.push('/dashboard');
+    }
+  };
 
   return (
-    <form className="mt-8 space-y-6">
+    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
       <div className="rounded-md shadow-sm -space-y-px">
         <div className="mb-4">
           <Label htmlFor="name">Full Name</Label>
@@ -79,8 +95,9 @@ export function SignUpForm() {
         <button
           type="submit"
           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          disabled={loading}
         >
-          Sign up
+          {!loading ? 'Signing up...' : 'Sign up'}
         </button>
       </div>
 

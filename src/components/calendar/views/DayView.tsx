@@ -56,8 +56,9 @@ export const DayView: React.FC<DayViewProps> = ({
             key={hour.toString()}
             ref={drop}
             className={`
-              flex border-b min-h-[100px]
-              ${isOver ? 'bg-blue-50' : 'hover:bg-gray-50'}
+              flex border-b border-gray-700 min-h-[100px]
+              ${isOver ? 'bg-[#2A2B31]' : 'bg-[#1E1F25] hover:bg-[#2A2B31]'}
+              transition-colors
             `}
             onClick={() => {
               const clickDate = new Date(selectedDate);
@@ -65,8 +66,8 @@ export const DayView: React.FC<DayViewProps> = ({
               onTimeSlotClick?.(clickDate);
             }}
           >
-            <div className="w-24 p-4 border-r bg-gray-50 shrink-0">
-              <span className="text-sm font-medium text-gray-600">
+            <div className="w-24 p-4 border-r border-gray-700 bg-[#141517] shrink-0">
+              <span className="text-sm font-medium text-gray-400">
                 {format(hour, 'h:mm a')}
               </span>
             </div>

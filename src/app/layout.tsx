@@ -2,6 +2,7 @@ import Sidebar from '@/components/shared/Sidebar';
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { AuthProvider } from '@/providers/AuthProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -15,15 +16,18 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
+        <AuthProvider>
         <div className="flex h-screen overflow-hidden">
           <Sidebar />
-          <main className="flex-1 overflow-y-auto bg-background">
+          <main className="flex-1 overflow-y-auto transition-all duration-300">
             {children}
           </main>
         </div>
+        </AuthProvider>
       </body>
     </html>
   );

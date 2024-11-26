@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuthStore } from '@/store/authStore';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Input } from '../ui/Input';
 import { Label } from '../ui/Label';
@@ -8,9 +10,19 @@ import { Label } from '../ui/Label';
 export function SignInForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const { login, error, loading } = useAuthStore();
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await login(email, password);
+    if (!error) {
+      router.push('/');
+    }
+  };
 
   return (
-    <form className="mt-8 space-y-6">
+    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
       <div className="rounded-md shadow-sm -space-y-px">
         <div className="mb-4">
           <Label htmlFor="email-address">Email address</Label>
@@ -42,6 +54,12 @@ export function SignInForm() {
         </div>
       </div>
 
+      {error && (
+        <div className="text-red-500 text-sm mb-4">
+          {error}
+        </div>
+      )}
+
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <input
@@ -66,8 +84,9 @@ export function SignInForm() {
         <button
           type="submit"
           className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          disabled={loading}
         >
-          Sign in
+          {!loading ? 'Signing in...' : 'Sign in'}
         </button>
       </div>
 
