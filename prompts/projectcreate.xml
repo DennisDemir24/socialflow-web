@@ -1,0 +1,12 @@
+<purpose>
+    Make the add project button work, and make it open a new dialog, with a form to add a new project
+</purpose>
+
+<instructions>
+    <instruction>
+    When user clicking on add project button
+    </instruction>
+    <instruction>
+    Open a new dialog with a form to add a new project
+    </instruction>
+</instructions>
