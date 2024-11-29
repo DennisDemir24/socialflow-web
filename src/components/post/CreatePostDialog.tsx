@@ -5,7 +5,6 @@ import { format } from 'date-fns';
 import { Post } from '../calendar/Calendar';
 import { useState, useEffect } from 'react';
 import { PreviewPane } from '../preview/PreviewPane';
-import { RichTextEditor } from '../editor/RichTextEditor';
 import { Label } from '../ui/Label';
 import { Input } from '../ui/Input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/Select';
@@ -65,11 +64,11 @@ export function CreatePostDialog({
   return (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[800px] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-white p-6 shadow-lg overflow-y-auto">
+        <Dialog.Overlay className="fixed inset-0 bg-black/70" />
+        <Dialog.Content className="fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[800px] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-[#141517] p-6 shadow-lg overflow-y-auto border border-[#2A2B31]">
           <div className="flex justify-between items-center mb-6">
-            <Dialog.Title className="text-lg font-semibold">Create Post</Dialog.Title>
-            <Dialog.Close className="rounded-full p-1.5 hover:bg-gray-100">
+            <Dialog.Title className="text-lg font-semibold text-white">Create Post</Dialog.Title>
+            <Dialog.Close className="rounded-full p-1.5 hover:bg-[#2A2B31] text-white transition-colors">
               <span className="sr-only">Close</span>
               <svg
                 className="h-5 w-5"
@@ -88,27 +87,29 @@ export function CreatePostDialog({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="title">Title</Label>
+                <Label htmlFor="title" className="text-white">Title</Label>
                 <Input
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="Enter post title"
+                  className="bg-[#1A1C22] text-white"
                 />
               </div>
 
               <div>
-                <Label htmlFor="content">Content</Label>
-                <div className="min-h-[200px] border rounded-md">
-                  <RichTextEditor
-                    content={content}
-                    onChange={setContent}
-                  />
-                </div>
+                <Label htmlFor="content" className="text-white">Content</Label>
+                <textarea
+                  id="content"
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  placeholder="Enter your post content"
+                  className="w-full min-h-[200px] p-3 rounded-md bg-[#1E1F25] border border-[#2A2B31] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B5FED] focus:border-transparent resize-y"
+                />
               </div>
 
               <div>
-                <Label htmlFor="platform">Platform</Label>
+                <Label htmlFor="platform" className="text-white">Platform</Label>
                 <Select value={platform} onValueChange={setPlatform}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select platform" />
@@ -123,7 +124,7 @@ export function CreatePostDialog({
               </div>
 
               <div>
-                <Label htmlFor="scheduled-time">Scheduled Time</Label>
+                <Label htmlFor="scheduled-time" className="text-white">Scheduled Time</Label>
                 <Input
                   id="scheduled-time"
                   type="datetime-local"
@@ -138,20 +139,21 @@ export function CreatePostDialog({
                       console.error('Invalid date:', err);
                     }
                   }}
+                  className="bg-[#1A1C22] text-white"
                 />
               </div>
 
               <div className="pt-4">
                 <button
                   onClick={handleSave}
-                  className="w-full bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors"
+                  className="w-full bg-[#5B5FED] hover:bg-[#4B4FDD] text-white px-4 py-2 rounded-md transition-colors"
                 >
                   Create Post
                 </button>
               </div>
             </div>
 
-            <div className="border rounded-md p-4">
+            <div className="border border-[#2A2B31] rounded-md p-4 text-white">
               <h3 className="font-medium mb-4">Preview</h3>
               <div className="overflow-y-auto max-h-[600px]">
                 <PreviewPane 

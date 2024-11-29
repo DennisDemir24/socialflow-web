@@ -5,9 +5,9 @@ import { format } from 'date-fns';
 import { Post } from '../calendar/Calendar';
 import { useState, useEffect } from 'react';
 import { PreviewPane } from '../preview/PreviewPane';
-import { RichTextEditor } from '../editor/RichTextEditor';
 import { Label } from '../ui/Label';
 import { Input } from '../ui/Input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/Select';
 
 interface PostDialogProps {
   post: Post | null;
@@ -62,13 +62,13 @@ export function PostDialog({
   return (
     <Dialog.Root open={isOpen} onOpenChange={onClose}>
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[800px] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-white p-6 shadow-lg">
+        <Dialog.Overlay className="fixed inset-0 bg-black/70" />
+        <Dialog.Content className="fixed left-[50%] top-[50%] max-h-[85vh] w-[90vw] max-w-[800px] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-[#141517] p-6 shadow-lg overflow-y-auto border border-[#2A2B31]">
           <div className="flex justify-between items-center mb-6">
-            <Dialog.Title className="text-lg font-semibold">
+            <Dialog.Title className="text-lg font-semibold text-white">
               {post ? 'Edit Post' : 'Create Post'}
             </Dialog.Title>
-            <Dialog.Close className="rounded-full p-1.5 hover:bg-gray-100">
+            <Dialog.Close className="rounded-full p-1.5 hover:bg-[#2A2B31] text-white transition-colors">
               <span className="sr-only">Close</span>
               <svg
                 className="h-5 w-5"
@@ -87,7 +87,7 @@ export function PostDialog({
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
-                <Label htmlFor="title">Title</Label>
+                <Label htmlFor="title" className="text-white">Title</Label>
                 <Input
                   id="title"
                   value={editedPost.title}
@@ -95,63 +95,70 @@ export function PostDialog({
                     setEditedPost((prev) => prev ? { ...prev, title: e.target.value } : null)
                   }
                   placeholder="Enter post title"
+                  className="bg-[#1A1C22] text-white"
                 />
               </div>
 
               <div>
-                <Label htmlFor="content">Content</Label>
-                <RichTextEditor
-                  content={editedPost.content}
-                  onChange={(content) =>
-                    setEditedPost((prev) => prev ? { ...prev, content } : null)
+                <Label htmlFor="content" className="text-white">Content</Label>
+                <textarea
+                  id="content"
+                  value={editedPost.content}
+                  onChange={(e) =>
+                    setEditedPost((prev) => prev ? { ...prev, content: e.target.value } : null)
                   }
+                  placeholder="Enter your post content"
+                  className="w-full min-h-[200px] p-3 rounded-md bg-[#1E1F25] border border-[#2A2B31] text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#5B5FED] focus:border-transparent resize-y"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="platform">Platform</Label>
-                  <select
-                    id="platform"
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    value={editedPost.platform}
-                    onChange={(e) =>
-                      setEditedPost((prev) =>
-                        prev ? { ...prev, platform: e.target.value as Post['platform'] } : null
+                  <Label htmlFor="platform" className="text-white">Platform</Label>
+                  <Select 
+                    value={editedPost.platform} 
+                    onValueChange={(value) => 
+                      setEditedPost((prev) => 
+                        prev ? { ...prev, platform: value as Post['platform'] } : null
                       )
                     }
                   >
-                    {['twitter', 'facebook', 'instagram', 'linkedin'].map((platform) => (
-                      <option key={platform} value={platform}>
-                        {platform.charAt(0).toUpperCase() + platform.slice(1)}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select platform" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="twitter">Twitter</SelectItem>
+                      <SelectItem value="facebook">Facebook</SelectItem>
+                      <SelectItem value="instagram">Instagram</SelectItem>
+                      <SelectItem value="linkedin">LinkedIn</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div>
-                  <Label htmlFor="status">Status</Label>
-                  <select
-                    id="status"
-                    className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
-                    value={editedPost.status}
-                    onChange={(e) =>
-                      setEditedPost((prev) =>
-                        prev ? { ...prev, status: e.target.value as Post['status'] } : null
+                  <Label htmlFor="status" className="text-white">Status</Label>
+                  <Select 
+                    value={editedPost.status} 
+                    onValueChange={(value) => 
+                      setEditedPost((prev) => 
+                        prev ? { ...prev, status: value as Post['status'] } : null
                       )
                     }
                   >
-                    {['draft', 'scheduled', 'published'].map((status) => (
-                      <option key={status} value={status}>
-                        {status.charAt(0).toUpperCase() + status.slice(1)}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select status" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="draft">Draft</SelectItem>
+                      <SelectItem value="scheduled">Scheduled</SelectItem>
+                      <SelectItem value="published">Published</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="scheduledTime">Scheduled Time</Label>
+                <Label htmlFor="scheduledTime" className="text-white">Scheduled Time</Label>
                 <Input
                   type="datetime-local"
                   id="scheduledTime"
@@ -161,13 +168,21 @@ export function PostDialog({
                       prev ? { ...prev, scheduledTime: new Date(e.target.value) } : null
                     )
                   }
+                  className="bg-[#1A1C22] text-white"
                 />
               </div>
             </div>
 
-            <div className="bg-gray-50 rounded-lg p-4">
-              <h3 className="text-sm font-medium text-gray-900 mb-4">Preview</h3>
-              <PreviewPane post={editedPost} />
+            <div className="border border-[#2A2B31] rounded-md p-4 text-white">
+              <h3 className="font-medium mb-4">Preview</h3>
+              <div className="overflow-y-auto max-h-[600px]">
+                <PreviewPane 
+                  platform={editedPost.platform}
+                  content={editedPost.content}
+                  title={editedPost.title}
+                  scheduledTime={editedPost.scheduledTime}
+                />
+              </div>
             </div>
           </div>
 
@@ -175,20 +190,20 @@ export function PostDialog({
             {post && (
               <button
                 onClick={handleDelete}
-                className="px-4 py-2 text-sm font-medium text-red-600 hover:text-red-700"
+                className="px-4 py-2 text-sm font-medium text-red-500 hover:text-red-400 transition-colors"
               >
                 Delete
               </button>
             )}
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-800"
+              className="px-4 py-2 text-sm font-medium text-white hover:text-gray-300 transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+              className="px-4 py-2 text-sm font-medium text-white bg-[#5B5FED] hover:bg-[#4B4FDD] rounded-md transition-colors"
             >
               {post ? 'Save Changes' : 'Create Post'}
             </button>
