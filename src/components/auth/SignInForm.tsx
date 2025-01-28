@@ -1,101 +1,185 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useAuthStore } from '@/store/authStore';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Input } from '../ui/Input';
-import { Label } from '../ui/Label';
+import * as React from "react";
+import { useForm } from "react-hook-form";
+import { useAuthStore } from "@/store/authStore";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Icons } from "@/components/ui/icons";
+import { Input } from "../ui/Input";
+
+const formSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  rememberMe: z.boolean().default(false),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 export function SignInForm() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const { login, error, loading } = useAuthStore();
   const router = useRouter();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await login(email, password);
+  // Add error cleanup effect
+  React.useEffect(() => {
+    return () => {
+      // Clear error state when component unmounts
+      useAuthStore.setState({ error: null });
+    };
+  }, []);
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      rememberMe: false,
+    },
+  });
+
+  const onSubmit = async (values: FormData) => {
+    // Clear any previous errors
+    useAuthStore.setState({ error: null });
+    
+    await login(values.email, values.password);
     if (!error) {
-      router.push('/');
+      router.push("/");
+    } else {
+      // Reset form fields on error
+      form.reset({ 
+        email: values.email, // Keep email for user convenience
+        password: "", // Clear password
+        rememberMe: values.rememberMe 
+      });
     }
   };
 
   return (
-    <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-      <div className="rounded-md shadow-sm -space-y-px">
-        <div className="mb-4">
-          <Label htmlFor="email-address">Email address</Label>
-          <Input
-            id="email-address"
+    <Form {...form}>
+      <form 
+        onSubmit={form.handleSubmit(onSubmit)} 
+        className="mt-8 space-y-6 rounded-lg bg-card p-6 shadow-lg border border-border animate-in fade-in-50"
+      >
+        <div className="space-y-4">
+          <FormField
+            control={form.control}
             name="email"
-            type="email"
-            autoComplete="email"
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-            placeholder="Email address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email address</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Icons.mail className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      {...field}
+                      type="email"
+                      placeholder="name@example.com"
+                      className="pl-10"
+                      autoComplete="email"
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="mb-4">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            id="password"
+
+          <FormField
+            control={form.control}
             name="password"
-            type="password"
-            autoComplete="current-password"
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="appearance-none rounded-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-            placeholder="Password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Icons.lock className="absolute left-3 top-2.5 h-5 w-5 text-muted-foreground" />
+                    <Input
+                      {...field}
+                      type="password"
+                      className="pl-10"
+                      autoComplete="current-password"
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
         </div>
-      </div>
 
-      {error && (
-        <div className="text-red-500 text-sm mb-4">
-          {error}
-        </div>
-      )}
+        {error && (
+          <div className="text-destructive text-sm rounded-md bg-destructive/10 p-2 animate-in fade-in-50">
+            {error}
+          </div>
+        )}
 
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <input
-            id="remember-me"
-            name="remember-me"
-            type="checkbox"
-            className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-          />
-          <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-            Remember me
-          </label>
-        </div>
+        <div className="flex items-center justify-between">
+         {/*  <FormField
+            control={form.control}
+            name="rememberMe"
+            render={({ field }) => (
+              <FormItem className="flex items-center space-x-2">
+                <FormControl>
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+                <FormLabel className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  Remember me
+                </FormLabel>
+              </FormItem>
+            )}
+          /> */}
 
-        <div className="text-sm">
-          <Link href="/auth/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link
+            href="/auth/forgot-password"
+            className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          >
             Forgot your password?
           </Link>
         </div>
-      </div>
 
-      <div>
-        <button
+        <Button
           type="submit"
-          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="w-full"
           disabled={loading}
         >
-          {!loading ? 'Signing in...' : 'Sign in'}
-        </button>
-      </div>
+          {loading ? (
+            <>
+              <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+              Signing in...
+            </>
+          ) : (
+            "Sign in"
+          )}
+        </Button>
 
-      <div className="text-center mt-4">
-        <span className="text-sm text-gray-600">Don't have an account? </span>
-        <Link href="/auth/signup" className="font-medium text-indigo-600 hover:text-indigo-500">
-          Sign up
-        </Link>
-      </div>
-    </form>
+        <div className="text-center mt-4">
+          <span className="text-sm text-muted-foreground">
+            Don't have an account?{" "}
+          </span>
+          <Link
+            href="/auth/signup"
+            className="text-sm font-medium text-primary hover:text-primary/80 transition-colors"
+          >
+            Sign up
+          </Link>
+        </div>
+      </form>
+    </Form>
   );
 }

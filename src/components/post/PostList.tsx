@@ -50,34 +50,34 @@ export function PostList({ posts, onEditPost, onDeletePost }: PostListProps) {
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
       case 'draft':
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-700';
       case 'scheduled':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-700';
       case 'published':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-700';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-700';
     }
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {sortedDates.map((date) => (
-        <div key={date} className="bg-white rounded-lg shadow">
-          <div className="px-6 py-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-900">
+        <div key={date} className="rounded-xl border bg-card shadow-sm">
+          <div className="px-6 py-4 border-b">
+            <h2 className="text-lg font-semibold">
               {format(new Date(date), 'EEEE, MMMM d, yyyy')}
             </h2>
           </div>
-          <div className="divide-y divide-gray-200">
+          <div className="divide-y divide-gray-100">
             {groupedPosts[date].map((post) => (
               <div
                 key={post.id}
-                className="px-6 py-4 flex items-center justify-between hover:bg-gray-50"
+                className="px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
               >
-                <div className="flex-1 min-w-0">
+                <div className="flex-1 min-w-0 space-y-1">
                   <div className="flex items-center space-x-3">
-                    <span className="text-sm font-medium text-gray-900 truncate">
+                    <span className="text-sm font-medium truncate">
                       {post.title}
                     </span>
                     <span
@@ -88,19 +88,20 @@ export function PostList({ posts, onEditPost, onDeletePost }: PostListProps) {
                       {post.status}
                     </span>
                   </div>
-                  <div className="mt-1 flex items-center space-x-3">
-                    <span className={`text-sm ${getPlatformColor(post.platform)}`}>
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <span className={getPlatformColor(post.platform)}>
                       {post.platform}
                     </span>
-                    <span className="text-sm text-gray-500">
+                    <span>•</span>
+                    <span>
                       {format(new Date(post.scheduledTime), 'h:mm a')}
                     </span>
                   </div>
                 </div>
                 <div className="ml-4">
                   <DropdownMenu>
-                    <DropdownMenuTrigger className="p-2 hover:bg-gray-100 rounded-full">
-                      <MoreHorizontal className="h-4 w-4 text-gray-500" />
+                    <DropdownMenuTrigger className="p-2 hover:bg-muted rounded-full transition-colors">
+                      <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => onEditPost(post)}>
@@ -108,7 +109,7 @@ export function PostList({ posts, onEditPost, onDeletePost }: PostListProps) {
                         Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        className="text-red-600"
+                        className="text-destructive"
                         onClick={() => onDeletePost(post.id)}
                       >
                         <Trash className="mr-2 h-4 w-4" />

@@ -41,18 +41,28 @@ export const useAuthStore = create<AuthState>((set) => ({
         password,
       });
       
-      if (error) throw error;
+      if (error) {
+        set({ 
+          loading: false, 
+          error: error.message,
+          isAuthenticated: false,
+          user: null
+        });
+        return;
+      }
       
       set({ 
         isAuthenticated: true, 
         user: data.user, 
-        loading: false 
+        loading: false,
+        error: null
       });
     } catch (error: any) {
       set({ 
-        isAuthenticated: false, 
-        error: error.message, 
-        loading: false 
+        loading: false, 
+        error: error.message || 'An error occurred during login',
+        isAuthenticated: false,
+        user: null
       });
     }
   },

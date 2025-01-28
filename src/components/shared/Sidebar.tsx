@@ -53,10 +53,10 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(true)
   const {logout, isAuthenticated} = useAuthStore()
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     try {
-      logout()
-    router.push('/auth/signin')
+      await logout()
+      router.push('/auth/signin')
     } catch (error) {
       console.log(error)
     }

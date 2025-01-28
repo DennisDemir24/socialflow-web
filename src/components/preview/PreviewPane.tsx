@@ -194,9 +194,12 @@ export function PreviewPane({ platform, content, title, scheduledTime = new Date
           <span>💬</span>
           <span>➡️</span>
         </div>
-        <div>
-          <span className="font-semibold mr-2">{title || 'your_instagram'}</span>
-          <div className="whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: plainContent }} />
+        <div className="text-gray-900">  {/* Added text color */}
+          <div className="font-semibold mb-1">{title || 'your_instagram'}</div>  {/* Changed to block element */}
+          <div 
+            className="whitespace-pre-wrap" 
+            dangerouslySetInnerHTML={{ __html: plainContent }} 
+          />
         </div>
         <div className="text-gray-500 text-sm mt-1">
           {format(scheduledTime, 'MMMM d, yyyy')}

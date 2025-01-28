@@ -4,7 +4,7 @@ import { KanbanBoard } from "@/components/projects/KanbanBoard";
 import { ProjectList } from "@/components/projects/ProjectList";
 import { CreateProjectDialog } from "@/components/projects/CreateProjectDialog";
 import { Button } from "@/components/ui/button";
-import { MoreVertical, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 import { useProjectStore } from "@/store/projectStore";
 
